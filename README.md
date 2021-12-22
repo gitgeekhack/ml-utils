@@ -2,5 +2,5 @@
 
 # install instructions
 ```
-pip install git+https://github.com/siddharth2395/mlutils.git
+pip install git+https://github.com/gitgeekhack/ml-utils.git
 ```
