@@ -1,9 +1,10 @@
 import math
 import os
 import shutil
+
 import numpy as np
 
-from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData
+from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
 from mlutils.data_ops.dataset import Dataset
 
 __all__ = ['split_data']
@@ -46,24 +47,39 @@ def split_data(data, train=.70, valid=.20, unseen_test=0.0):
                         'valid': valid})
 
 
-def get_files_from_dir(source):
-    dir_list = os.listdir(source)
+def get_files_from_dir(source_path):
+    dir_list = os.listdir(source_path)
     return dir_list
 
 
-def save_to_file(files, source, target_path):
+def save_to_file(files, source_path, target_path):
     if not os.path.exists(target_path):
         os.mkdir(target_path)
     for file in files:
-        shutil.copy(os.path.join(source, file), target_path)
+        shutil.copy(os.path.join(source_path, file), target_path)
 
 
-def split_dataset_from_dir(source, target, train=0.7, unseen_test=0.3, valid=0.0):
-    try:
-        files = get_files_from_dir(source)
+def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3, valid=0.0):
+    """
+    This method takes source directory path and splits the given data into training, validation and unseen testing
+    datasets based on the splitting ratio provided as an input for each dataset and saves in the target directory.
+       Parameter:
+           source_path: path for source directory.
+           target_path: path of target directory
+           train: number of percent data that needs to be consider for training
+           valid: number of percent data that needs to be consider for valid
+           unseen_test: number of percent data that needs to be consider for unseen_test
+
+           train, valid, unseen_test values must be greater than 0 and less than 1.
+           sum of teh train, valid, unseen_test values must be greater 1.
+       """
+    if os.path.exists(source_path):
+        files = get_files_from_dir(source_path)
         data = split_data(files, train=train, valid=valid, unseen_test=unseen_test)
-        save_to_file(data.train, source, os.path.join(target, 'train'))
-        save_to_file(data.unseen_test, source, os.path.join(target, 'valid'))
-        save_to_file(data.valid, source, os.path.join(target, 'test'))
-    except Exception as e:
-        print(e)
+        save_to_file(data.train, source_path, os.path.join(target_path, 'train'))
+        save_to_file(data.valid, source_path, os.path.join(target_path, 'valid'))
+        save_to_file(data.unseen_test, source_path, os.path.join(target_path, 'test'))
+    else:
+        raise DirectoryNotFound(f'Unable to find source directory')
+
+
