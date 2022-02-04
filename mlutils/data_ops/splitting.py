@@ -1,5 +1,6 @@
 import math
-
+import os
+import shutil
 import numpy as np
 
 from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData
@@ -8,7 +9,7 @@ from mlutils.data_ops.dataset import Dataset
 __all__ = ['split_data']
 
 
-def split_data(data, train=.70, valid=.20, unseen_test=0):
+def split_data(data, train=.70, valid=.20, unseen_test=0.0):
     """
     This method splits the given data into training, validation and unseen testing datasets based on
     the splitting ratio provided as an input for each dataset.
@@ -40,5 +41,29 @@ def split_data(data, train=.70, valid=.20, unseen_test=0):
         if valid_ratio == 0:
             raise InsufficientData(f'Unable to Split data with length of {len(data)}')
         valid, train = np.split(data, [valid_ratio])
+
         return Dataset({'train': train,
                         'valid': valid})
+
+
+def get_files_from_dir(source):
+    dir_list = os.listdir(source)
+    return dir_list
+
+
+def save_to_file(files, source, target_path):
+    if not os.path.exists(target_path):
+        os.mkdir(target_path)
+    for file in files:
+        shutil.copy(os.path.join(source, file), target_path)
+
+
+def split_dataset_from_dir(source, target, train=0.7, unseen_test=0.3, valid=0.0):
+    try:
+        files = get_files_from_dir(source)
+        data = split_data(files, train=train, valid=valid, unseen_test=unseen_test)
+        save_to_file(data.train, source, os.path.join(target, 'train'))
+        save_to_file(data.unseen_test, source, os.path.join(target, 'valid'))
+        save_to_file(data.valid, source, os.path.join(target, 'test'))
+    except Exception as e:
+        print(e)
