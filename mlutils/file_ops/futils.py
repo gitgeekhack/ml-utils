@@ -23,7 +23,7 @@ def copy_file(source_path, target_path, files=None):
     """
 
     make_dir(target_path)
-    if files.size == 0:
+    if files is None:
         files = get_files_from_dir(source_path)
     for file in files:
         shutil.copy(os.path.join(source_path, file), target_path)
