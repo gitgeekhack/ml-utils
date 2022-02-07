@@ -1,8 +1,13 @@
+import os
+
 import numpy as np
 
-from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData
-from mlutils.data_ops import split_data
+from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
+from mlutils.data_ops import split_data, split_dataset_from_dir
 
+target_20 = './data/target_20'
+source_20 = './data/source_20'
+source_0 = './data/source_0'
 
 class TestDataOpsSplitDataset():
     def test_split_data_valid_list1(self):
@@ -75,5 +80,27 @@ class TestDataOpsSplitDataset():
     def test_split_data_invalid_insufficient_data(self):
         try:
             split_data(list(range(3)), train=0.7, valid=0.3)
+        except InsufficientData as e:
+            assert True
+
+    def test_split_dataset_from_dir_invalid_source(self):
+        try:
+            dataset = split_dataset_from_dir('', target_20, train=0.7, valid=0.3)
+        except DirectoryNotFound as e:
+            assert True
+
+    def test_split_dataset_from_dir(self):
+        split_dataset_from_dir(source_path=source_20, target_path=target_20,
+                               train=0.7, valid=0.2, unseen_test=0.1)
+        _, dirs, _ = next(os.walk(target_20))
+        assert dirs == ['train', 'valid', 'test']
+        assert sum(len(files) for _, _, files in os.walk(r'./data/target_20/train')) == 14
+        assert sum(len(files) for _, _, files in os.walk(r'./data/target_20/valid')) == 4
+        assert sum(len(files) for _, _, files in os.walk(r'./data/target_20/test')) == 2
+
+    def test_split_dataset_from_dir_empty(self):
+        try:
+            split_dataset_from_dir(source_path=source_0, target_path=target_20,
+                                   train=0.7, valid=0.2, unseen_test=0.1)
         except InsufficientData as e:
             assert True
