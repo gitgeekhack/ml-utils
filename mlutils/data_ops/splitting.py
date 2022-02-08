@@ -1,16 +1,16 @@
 import math
 import os
-
+import random as rand
 import numpy as np
 
 from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
 from mlutils.data_ops.dataset import Dataset
-from mlutils.file_ops.futils import copy_file, get_files_from_dir,make_dir
+from mlutils.file_ops.futils import copy_file, get_files_from_dir, make_dir
 
 __all__ = ['split_data']
 
 
-def split_data(data, train=.70, valid=.20, unseen_test=0.0):
+def split_data(data, train=.70, valid=.20, unseen_test=0.0, random=True):
     """
     This method splits the given data into training, validation and unseen testing datasets based on
     the splitting ratio provided as an input for each dataset.
@@ -19,12 +19,14 @@ def split_data(data, train=.70, valid=.20, unseen_test=0.0):
            train: number of percent data that needs to be considered for training
            valid: number of percent data that needs to be considered for valid
            unseen_test: number of percent data that needs to be considered for unseen_test
+           random: if True it will randomly shuffle data
 
            train, valid, unseen_test values must be greater than 0 and less than 1.
            sum of teh train, valid, unseen_test values must be greater 1.
        Return:
            Dataset object with the train, valid, unseen_test dataset based on the splitting ratio.
        """
+    if random is True: rand.shuffle(data)
     if train >= 1 or valid >= 1 or unseen_test >= 1 or not math.isclose(sum([train, valid, unseen_test]), 1):
         raise InvalidSplittingValues({'train': train, 'valid': valid, 'unseen_test': unseen_test})
     if unseen_test != 0:
@@ -47,7 +49,7 @@ def split_data(data, train=.70, valid=.20, unseen_test=0.0):
                         'valid': valid})
 
 
-def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3, valid=0.0):
+def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3, valid=0.0, random=True):
     """
     This method takes source directory path and splits the given data into training, validation and unseen testing
     datasets based on the splitting ratio provided as an input for each dataset and saves in the target directory.
@@ -64,7 +66,7 @@ def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3,
     make_dir(target_path)
     if os.path.exists(source_path):
         files = get_files_from_dir(source_path)
-        data = split_data(files, train=train, valid=valid, unseen_test=unseen_test)
+        data = split_data(files, train=train, valid=valid, unseen_test=unseen_test, random=random)
         copy_file(source_path, os.path.join(target_path, 'train'), files=data.train)
         copy_file(source_path, os.path.join(target_path, 'valid'), files=data.valid)
         copy_file(source_path, os.path.join(target_path, 'test'), files=data.unseen_test)
