@@ -90,8 +90,6 @@ class TestDataOpsSplitDataset():
             assert True
 
     def test_split_dataset_from_dir(self):
-        if os.path.exists(target_20):
-            shutil.rmtree(target_20)
         split_dataset_from_dir(source_path=source_20, target_path=target_20,
                                train=0.7, valid=0.2, unseen_test=0.1)
         _, dirs, _ = next(os.walk(target_20))
@@ -99,6 +97,8 @@ class TestDataOpsSplitDataset():
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/train')) == 7
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/valid')) == 2
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/test')) == 1
+        if os.path.exists(target_20):
+            shutil.rmtree(target_20)
 
     def test_split_dataset_from_dir_empty(self):
         try:
