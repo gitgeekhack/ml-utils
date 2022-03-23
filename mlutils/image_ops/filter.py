@@ -4,7 +4,7 @@ import cv2
 
 from mlutils.business_rule_exceptions import DirectoryNotFound
 from mlutils.file_ops.futils import make_dir, copy_file
-from mlutils.image_ops.iutils import check_minimum_resolution
+from mlutils.image_ops.iutils import check_minimum_dimension
 
 
 def filter_dataset_by_dimension(source_path, target_path, min_width=320, min_height=320):
@@ -24,7 +24,7 @@ def filter_dataset_by_dimension(source_path, target_path, min_width=320, min_hei
             for file in filenames:
                 image_path = os.path.abspath(os.path.join(dir_path, file))
                 image = cv2.imread(image_path, 0)
-                if check_minimum_resolution(image, min_width, min_height):
+                if check_minimum_dimension(image, min_width, min_height):
                     valid_images.append(file)
         copy_file(source_path, target_path, valid_images)
     else:
