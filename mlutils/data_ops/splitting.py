@@ -14,7 +14,7 @@ def split_data(data, train=.70, valid=.20, unseen_test=0.0, random=True):
     """
     This method splits the given data into training, validation and unseen testing datasets based on
     the splitting ratio provided as an input for each dataset.
-       Parameter:
+       Args:
            data: List or numpy array
            train: number of percent data that needs to be considered for training
            valid: number of percent data that needs to be considered for valid
@@ -53,7 +53,7 @@ def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3,
     """
     This method takes source directory path and splits the given data into training, validation and unseen testing
     datasets based on the splitting ratio provided as an input for each dataset and saves in the target directory.
-       Parameter:
+       Args:
            source_path: path for source directory.
            target_path: path of target directory
            train: number of percent data that needs to be considered for training

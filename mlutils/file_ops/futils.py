@@ -17,9 +17,9 @@ def copy_file(source_path, target_path, files=None):
     This is method copies files from source_path to target_path,
     if files are not mentioned then all files from source is copied to target
     Args:
-        source_path <string>: path for source directory.
-        target_path <string>: path of target directory.
-        files <list>: list of files to be copied from source to target.
+        source_path: <string> path for source directory.
+        target_path: <string> path of target directory.
+        files: <list> list of files to be copied from source to target.
     """
 
     make_dir(target_path)
