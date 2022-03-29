@@ -7,7 +7,7 @@ target_20 = './data/target_20'
 source_20 = './data/source_20'
 
 
-class TestDataOpsSplitDataset():
+class TestDataSplitDataset():
     def test_filter_dataset_by_dimension_valid(self):
         filter_images_by_dimension(source_20, target_20, 150, 150)
         assert sum(len(files) for _, _, files in os.walk(target_20)) == 6

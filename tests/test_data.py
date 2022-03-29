@@ -9,7 +9,7 @@ target_20 = './data/target_20'
 source_20 = './data/source_20'
 source_0 = './data/source_0'
 
-class TestDataOpsSplitDataset():
+class TestDataSplitDataset():
     def test_split_data_valid_list1(self):
         dataset = split_data(list(range(10)), train=0.7, valid=0.3)
         assert len(dataset.train) == 7

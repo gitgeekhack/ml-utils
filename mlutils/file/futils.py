@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from tqdm import tqdm
+
 
 def get_files_from_dir(source_path):
     dir_list = os.listdir(source_path)
@@ -25,5 +27,5 @@ def copy_file(source_path, target_path, files=None):
     make_dir(target_path)
     if files is None:
         files = get_files_from_dir(source_path)
-    for file in files:
+    for file in tqdm(files, desc=f"Copying files to {target_path.split('/')[-1]}"):
         shutil.copy(os.path.join(source_path, file), target_path)
