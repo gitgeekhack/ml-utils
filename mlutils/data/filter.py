@@ -3,11 +3,11 @@ import os
 import cv2
 
 from mlutils.business_rule_exceptions import DirectoryNotFound
-from mlutils.file_ops.futils import make_dir, copy_file
-from mlutils.image_ops.iutils import check_minimum_dimension
+from mlutils.file.futils import make_dir, copy_file
+from mlutils.image_helper.utils import check_minimum_dimension
 
 
-def filter_dataset_by_dimension(source_path, target_path, min_width=320, min_height=320):
+def filter_images_by_dimension(source_path, target_path, min_width=320, min_height=320):
     """
     This is which filter image dataset by its dimension and remove images which are smaller than the minimum width and height.
     If no minimum width or height is provided, the resolution of 320x320 will be considered as minimum resolution.
