@@ -6,7 +6,7 @@ setuptools.setup(
     description="ML utils library for python",
     long_description_content_type="text/markdown",
     url="https://github.com/gitgeekhack/ml-utils",
-    packages=['mlutils', 'mlutils.data', 'mlutils.file','mlutils.business_rule_exceptions'],
+    packages=['mlutils', 'mlutils.data', 'mlutils.file', 'mlutils.business_rule_exceptions', 'mlutils.image_helper'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
