@@ -3,7 +3,7 @@ import os
 import cv2
 
 from mlutils.business_rule_exceptions import DirectoryNotFound
-from mlutils.file.futils import make_dir, copy_file
+from mlutils.file.utils import make_dir, copy_file
 from mlutils.image_helper.utils import check_minimum_dimension
 
 

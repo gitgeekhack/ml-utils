@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
 from mlutils.data.dataset import Dataset
-from mlutils.file.futils import copy_file, get_files_from_dir, make_dir
+from mlutils.file.utils import copy_file, get_files_from_dir, make_dir
 
 __all__ = ['split_data']
 
