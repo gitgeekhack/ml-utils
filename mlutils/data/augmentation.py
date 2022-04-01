@@ -37,7 +37,8 @@ class Augmentation:
             dataset[os.path.splitext(file_name)[0]] = {'image': file_path}
         for file_path in labels:
             _, file_name = os.path.split(file_path)
-            dataset[os.path.splitext(file_name)[0]] |= {'label': file_path}
+            if os.path.splitext(file_name)[0] != 'classes':
+                dataset[os.path.splitext(file_name)[0]] |= {'label': file_path}
         return dataset
 
     def __read_image(self, path):
