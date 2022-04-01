@@ -67,7 +67,7 @@ class Augmentation:
                 label = self.label_classes.index(i[1])
                 write_file.write(str(label) + " ")
                 for j in transformed['bboxes'][i[0]]:
-                    string = str(j)
+                    string = "{:.6f}".format(j)
                     write_file.write(string + " ")
                 write_file.write("\n")
 
@@ -80,7 +80,7 @@ class Augmentation:
         images = self.__load_images()
         labels = self.__load_labels()
         dataset = self.__map_dataset(images, labels)
-        for k, v in tqdm(dataset.items(), desc="Augmentation images"):
+        for k, v in tqdm(dataset.items(), desc="Augmenting images"):
             image = self.__read_image(v['image'])
             bboxes, _label_classes = self.__read_label(v['label'])
             self.__apply_transformation(_label_classes, bboxes, image)
