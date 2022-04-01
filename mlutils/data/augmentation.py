@@ -80,7 +80,7 @@ class Augmentation:
         images = self.__load_images()
         labels = self.__load_labels()
         dataset = self.__map_dataset(images, labels)
-        for k, v in tqdm(dataset.items(), desc="Augmentating images"):
+        for k, v in tqdm(dataset.items(), desc="Augmentation images"):
             image = self.__read_image(v['image'])
             bboxes, _label_classes = self.__read_label(v['label'])
             self.__apply_transformation(_label_classes, bboxes, image)
