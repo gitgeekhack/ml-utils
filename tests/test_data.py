@@ -2,7 +2,7 @@ import os
 import shutil
 import numpy as np
 
-from mlutils.business_rule_exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
+from mlutils.exceptions import InvalidSplittingValues, InsufficientData, DirectoryNotFound
 from mlutils.data import split_data, split_dataset_from_dir
 
 target_20 = './data/target_20'
