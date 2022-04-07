@@ -7,7 +7,7 @@ import cv2
 from tqdm import tqdm
 
 from mlutils.exceptions import InvalidConfiguration
-from mlutils.file.utils import get_all_absolute_file_paths_from_dir, make_dir
+from mlutils.file.utils import get_files_from_dir, make_dir
 
 
 class Augmentation:
@@ -36,11 +36,11 @@ class Augmentation:
             self.label_path = None
 
     def __load_images(self):
-        images = get_all_absolute_file_paths_from_dir(self.source_path)
+        images = get_files_from_dir(self.source_path)
         return images
 
     def __load_labels(self):
-        return get_all_absolute_file_paths_from_dir(self.label_path) if self.label_path else []
+        return get_files_from_dir(self.label_path) if self.label_path else []
 
     def __map_dataset(self, images, labels):
         dataset = {}
@@ -113,20 +113,20 @@ class Augmentation:
                 transformed = transform(image=image)
                 self.__save_image(i_new_name, transformed)
 
+#
+# transform = A.Compose([
+#     A.Blur(blur_limit=4, p=1),
+#     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=1),
+#     A.Rotate(30)], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
 
 transform = A.Compose([
     A.Blur(blur_limit=4, p=1),
     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=1),
-    A.Rotate(30)], bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
-
-# transform = A.Compose([
-#     A.Blur(blur_limit=4, p=1),
-#     A.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=1),
-#     A.Rotate(30)])
+    A.Rotate(30)])
 config = {
     "transform": transform,
     "source_path": "D:\\git\\mlutils\\tests\\data\\augmentation\\dataset\\",
-    "label_path": "D:\\git\\mlutils\\tests\\data\\augmentation\\labels\\",
+    # "label_path": "D:\\git\\mlutils\\tests\\data\\augmentation\\labels\\",
     "target_path": "D:\\git\\mlutils\\tests\\data\\augmentation\\tests\\",
     "multiplier": 3
 }

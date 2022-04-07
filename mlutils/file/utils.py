@@ -7,11 +7,6 @@ from tqdm import tqdm
 
 
 def get_files_from_dir(dir):
-    dir_list = os.listdir(dir)
-    return dir_list
-
-
-def get_all_absolute_file_paths_from_dir(dir):
     return [x for x in glob(join(dir, "**/*"), recursive=True) if not os.path.isdir(x)]
 
 
@@ -34,4 +29,4 @@ def copy_file(source_path, target_path, files=None):
     if files is None:
         files = get_files_from_dir(source_path)
     for file in tqdm(files, desc=f"Copying files to {target_path.split('/')[-1]}"):
-        shutil.copy(os.path.join(source_path, file), target_path)
+        shutil.copy(file, target_path)
