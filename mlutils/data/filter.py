@@ -4,7 +4,7 @@ import cv2
 
 from mlutils.exceptions import DirectoryNotFound
 from mlutils.file.utils import make_dir, copy_file
-from mlutils.image_helper.utils import check_minimum_dimension
+from mlutils.image.utils import check_minimum_dimension
 
 
 def filter_images_by_dimension(source_path, target_path, min_width=320, min_height=320):
