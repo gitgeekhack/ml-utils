@@ -11,6 +11,14 @@ from mlutils.file.utils import copy_file, file_exists
 
 
 def get_bbox_by_label(results):
+    """
+    This method transforms results returned by yolov5 detect method to a more useful and user-friendly format.
+    Args:
+        results: <class object> result object returned by yolov5 detect method
+    Returns:
+        transformed_results: <list> or None transformed results returned by yolov5 (name,label,bbox,conf)
+
+    """
     if results:
         if results.__class__.__name__ == 'Detections':
             transformed_results = []
@@ -29,12 +37,30 @@ def get_bbox_by_label(results):
 
 
 def read_class_labels(label_path):
+    """
+    This method reads class labels from class.txt file.
+    Args:
+        label_path: <string> path to class label file.
+    Returns:
+        class_labels: <list> list of class labels
+    """
     with open(label_path) as file:
         class_labels = [line.rstrip() for line in file]
     return class_labels
 
 
 def split_dataset_by_labels(image_path, annotation_path, class_labels, target_path=None, save=False):
+    """
+    This method splits image dataset by class labels.
+    Args:
+        image_path: <string> path to image folder.
+        annotation_path: <string> path to respective annotation folder.
+        class_labels: <list> list of class labels.
+        target_path: <string> path to target folder where the sorted images will be saved.
+        save: <boolean> Saves images to folder if True.
+    Returns:
+        images_per_label: <dict> returns set of image name as value and respective labels as key.
+    """
     file_exists(image_path)
     file_exists(annotation_path)
     images_per_label = {k: set() for k in class_labels}
@@ -57,6 +83,13 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
 
 
 def summary(data_file, save=False):
+    """
+    This method returns a detailed summary of the data-set with the help of data.yaml file,
+    also saves the summary to csv file if save is True
+    Args:
+        data_file: <string> path to data.yaml file
+        save: <boolean> Saves summary to csv file if True.
+    """
     file_exists(data_file)
     with open(data_file, "r") as f:
         lines = f.readlines()
