@@ -11,7 +11,6 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=['numpy==1.22.0',
-                      'opencv-python==4.5.5.64',
-                      'tqdm==4.63.1'],
+    install_requires=['numpy==1.22.0', 'opencv-python==4.5.5.64', 'tqdm==4.63.1',
+                      'pymupdf==1.19.6', 'tqdm==4.63.1','termtables~=0.2.4', 'setuptools~=60.2.0'],
 )
