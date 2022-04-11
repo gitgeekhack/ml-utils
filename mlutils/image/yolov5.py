@@ -44,6 +44,7 @@ def read_class_labels(label_path):
     Returns:
         class_labels: <list> list of class labels
     """
+    file_exists(label_path)
     with open(label_path) as file:
         class_labels = [line.rstrip() for line in file]
     return class_labels
