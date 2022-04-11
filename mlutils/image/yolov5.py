@@ -1,9 +1,12 @@
 import glob
 import os
+import re
 
+import termtables
+import pandas as pd
 from tqdm import tqdm
 
-from mlutils.exceptions import UnsupportedObjectType, DirectoryNotFound
+from mlutils.exceptions import UnsupportedObjectType
 from mlutils.file.utils import copy_file, file_exists
 
 
@@ -31,7 +34,7 @@ def read_class_labels(label_path):
     return class_labels
 
 
-def split_dataset_by_labels(image_path, annotation_path, class_labels, target_path=None, save=True):
+def split_dataset_by_labels(image_path, annotation_path, class_labels, target_path=None, save=False):
     file_exists(image_path)
     file_exists(annotation_path)
     images_per_label = {k: set() for k in class_labels}
@@ -47,13 +50,38 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
                     if image_name:
                         image_name = image_name[0][image_name[0].rfind('/') + 1:]
                         images_per_label[class_labels[label]].add(image_name)
-    if save:
+    if save and target_path:
         for key, value in images_per_label.items():
             copy_file(source_path=image_path, target_path=f'{target_path}/{key}', files=list(value))
     return images_per_label
 
-def summary(data_file):
+
+def summary(data_file, save=False):
+    file_exists(data_file)
     with open(data_file, "r") as f:
         lines = f.readlines()
-
-summary(data_file="/home/heli/Desktop/git/maruti-ocr/data/driving_license/new/data.yaml")
+        temp = {line.split(':')[0]: line.split(':')[1] for line in lines if len(line.strip()) > 1}
+        class_labels = re.sub(r"[\[\]\s]", "", temp['names']).split(',')
+        directory = os.path.dirname(data_file)
+        valid_path = directory + temp['val'].replace('.', '').strip()
+        test_path = directory + temp['test'].replace('.', '').strip()
+        train_path = directory + temp['train'].replace('.', '').strip()
+        valid_summary = split_dataset_by_labels(image_path=valid_path,
+                                                annotation_path=valid_path.replace('images', 'labels'),
+                                                class_labels=class_labels, save=False)
+        test_summary = split_dataset_by_labels(image_path=test_path,
+                                               annotation_path=test_path.replace('images', 'labels'),
+                                               class_labels=class_labels, save=False)
+        train_summary = split_dataset_by_labels(image_path=train_path,
+                                                annotation_path=train_path.replace('images', 'labels'),
+                                                class_labels=class_labels, save=False)
+        valid_images = {k: len(v) for k, v in valid_summary.items()}
+        test_images = {k: len(v) for k, v in test_summary.items()}
+        train_images = {k: len(v) for k, v in train_summary.items()}
+        header = ['No', "Label", 'Train', 'Test', 'Valid']
+        data = [[i + 1, label, train_images[label], test_images[label], valid_images[label]] for i, label in
+                enumerate(class_labels)]
+        termtables.print(data, header, style=termtables.styles.rounded_thick)
+        if save:
+            my_df = pd.DataFrame(data)
+            my_df.to_csv(directory + '/summary.csv', header=header, index=False)
