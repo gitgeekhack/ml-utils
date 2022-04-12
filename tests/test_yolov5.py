@@ -31,3 +31,11 @@ class TestYoloV5:
             x = summary(data_file='', save=False)
         except DirectoryNotFound as e:
             assert True
+
+    def test_split_dataset_by_labels_valid(self):
+        x = split_dataset_by_labels(image_path='./data/yolov5_test/train/images',
+                                    annotation_path='./data/yolov5_test/train/labels/',
+                                    class_labels=['class1','class2','class3','class4'],target_path=None, save=False)
+        y = {'class1': {'3.jpeg'}, 'class2': {'3.jpeg', '1.jpeg'},
+            'class3': {'2.jpeg', '1.jpeg'}, 'class4': {'3.jpeg', '2.jpeg'}}
+        assert x == y

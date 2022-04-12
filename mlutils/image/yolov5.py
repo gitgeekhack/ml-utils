@@ -65,10 +65,10 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
     file_exists(image_path)
     file_exists(annotation_path)
     images_per_label = {k: set() for k in class_labels}
-    for filename in tqdm(os.listdir(annotation_path)):
+    for filename in tqdm(os.listdir(annotation_path),'splitting dataset'):
         file = os.path.join(annotation_path, filename)
         if not filename == 'classes.txt':
-            with open(os.path.join(annotation_path, file), "r") as f:
+            with open(file, "r") as f:
                 lines = f.readlines()
                 for line in lines:
                     label = int(line[0:2])
