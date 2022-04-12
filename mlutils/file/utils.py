@@ -21,9 +21,10 @@ def make_dir(dir):
     if not os.path.exists(dir):
         os.makedirs(dir)
 
+
 def file_exists(path):
     if not os.path.exists(path):
-        raise DirectoryNotFound(f'Unable to find required directory(s)')
+        raise DirectoryNotFound(f'Unable to find required directory', file_url=path)
 
 
 def copy_file(source_path, target_path, files=None):

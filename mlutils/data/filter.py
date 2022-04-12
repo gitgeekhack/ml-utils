@@ -28,4 +28,4 @@ def filter_images_by_dimension(source_path, target_path, min_width=320, min_heig
                     valid_images.append(file)
         copy_file(source_path, target_path, valid_images)
     else:
-        raise DirectoryNotFound(f'Unable to find source directory')
+        raise DirectoryNotFound(f'Unable to find source directory', file_url=source_path)

@@ -7,7 +7,7 @@ from mlutils.exceptions import InvalidSplittingValues, InsufficientData, Directo
 from mlutils.data.dataset import Dataset
 from mlutils.file.utils import copy_file, get_files_from_dir, make_dir
 
-__all__ = ['split_data','split_dataset_from_dir']
+__all__ = ['split_data', 'split_dataset_from_dir']
 
 
 def split_data(data, train=.70, valid=.20, unseen_test=0.0, random=True):
@@ -34,19 +34,15 @@ def split_data(data, train=.70, valid=.20, unseen_test=0.0, random=True):
         valid_ratio = int((valid + unseen_test) * len(data))
         if unseen_ratio == 0 or valid_ratio == 0:
             raise InsufficientData(f'Unable to Split data with length of {len(data)}')
-        unseen_test, valid, train = np.split(data, [unseen_ratio,
-                                                    valid_ratio])
-        return Dataset({'train': train,
-                        'valid': valid,
-                        'unseen_test': unseen_test})
+        unseen_test, valid, train = np.split(data, [unseen_ratio, valid_ratio])
+        return Dataset({'train': train, 'valid': valid, 'unseen_test': unseen_test})
     else:
         valid_ratio = int(valid * len(data))
         if valid_ratio == 0:
             raise InsufficientData(f'Unable to Split data with length of {len(data)}')
         valid, train = np.split(data, [valid_ratio])
 
-        return Dataset({'train': train,
-                        'valid': valid})
+        return Dataset({'train': train, 'valid': valid})
 
 
 def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3, valid=0.0, random=True):
@@ -71,4 +67,4 @@ def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3,
         copy_file(source_path, os.path.join(target_path, 'valid'), files=data.valid)
         copy_file(source_path, os.path.join(target_path, 'test'), files=data.unseen_test)
     else:
-        raise DirectoryNotFound(f'Unable to find source directory')
+        raise DirectoryNotFound(f'Unable to find source directory', file_url=target_path)

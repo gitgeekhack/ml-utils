@@ -39,7 +39,7 @@ def get_bbox_by_label(results):
     return None
 
 
-def read_class_labels(label_path):
+def read_label_classes(label_path):
     """
     This method reads class labels from class.txt file.
     Args:
@@ -86,7 +86,7 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
     return images_per_label
 
 
-def summary(data_file, save=False):
+def dataset_summary(data_file, save=False):
     """
     This method returns a detailed summary of the data-set with the help of data.yaml file,
     also saves the summary to csv file if save is True

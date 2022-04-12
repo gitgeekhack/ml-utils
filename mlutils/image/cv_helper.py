@@ -7,7 +7,7 @@ from scipy.ndimage import interpolation as inter
 
 from mlutils.exceptions import MissingRequiredParameterException
 
-__all__ = ['get_object', 'cropp_object', 'extract_image_from_pdf', 'calculate_iou', 'get_skew_angel','fix_skew', 'match_template']
+__all__ = ['get_object', 'calculate_iou', 'get_skew_angel', 'fix_skew', 'match_template']
 
 
 def get_object(target_img, coordinates, label):
@@ -31,57 +31,14 @@ def get_object(target_img, coordinates, label):
     return {'detected_object': cropped_img, 'label': label}
 
 
-def cropp_object(target_img):
-    """
-    Parameters:
-        target_img <class 'numpy.ndarray'>: The target image which is to be cropped.
-        coordinates <class 'list'>: The coordinates of the region to be cropped, a 4-element list containing
-                            of x/y (x0, y0, x1, y1) pixel coordinates.
-    Returns:
-        cropped_img <class 'numpy.ndarray'>: The final image which is cropped with the coordinates provided.
-    """
-    h = target_img.shape[0]
-    w = target_img.shape[1]
-    w_padd = 0.05
-    h_padd = 0.08
-    new_w = int(w * w_padd)
-    new_h = int(h * h_padd)
-
-    cropped = target_img[:h - new_h, :w - new_w]
-
-    return cropped
-
-
-def extract_image_from_pdf(doc, image_list):
-    if image_list[1] and image_list[5] == 'DeviceRGB':
-        full_image = fitz.Pixmap(doc, image_list[0])
-        mask = fitz.Pixmap(doc, image_list[1])
-        covered_image = fitz.Pixmap(full_image, mask)
-        np_array = np.asarray(bytearray(covered_image.tobytes()), dtype=np.uint8)
-        input_image = cv2.imdecode(np_array, cv2.IMREAD_UNCHANGED)
-        trans_mask = input_image[:, :, 3] == 0
-        input_image[trans_mask] = [255, 255, 255, 255]
-        new_img = cv2.cvtColor(input_image, cv2.COLOR_BGRA2BGR)
-        return new_img
-
-    else:
-        xref = image_list[0]
-        pix = fitz.Pixmap(doc, xref)
-        if pix.n < 5:
-            np_array = np.asarray(bytearray(pix.tobytes()), dtype=np.uint8)
-            input_image = cv2.imdecode(np_array, cv2.IMREAD_UNCHANGED)
-            new_img = cv2.cvtColor(input_image, cv2.COLOR_BGRA2BGR)
-            return new_img
-
-
-def calculate_iou(container_bbox, signature_bbox):
-    x0 = max(container_bbox[0], signature_bbox[0])
-    y0 = max(container_bbox[1], signature_bbox[1])
-    x1 = min(container_bbox[2], signature_bbox[2])
-    y1 = min(container_bbox[3], signature_bbox[3])
+def calculate_iou(x, y):
+    x0 = max(x[0], y[0])
+    y0 = max(x[1], y[1])
+    x1 = min(x[2], y[2])
+    y1 = min(x[3], y[3])
     inter_area = max(0, x1 - x0 + 1) * max(0, y1 - y0 + 1)
-    box0_area = (container_bbox[2] - container_bbox[0] + 1) * (container_bbox[3] - container_bbox[1] + 1)
-    box1_area = (signature_bbox[2] - signature_bbox[0] + 1) * (signature_bbox[3] - signature_bbox[1] + 1)
+    box0_area = (x[2] - x[0] + 1) * (x[3] - x[1] + 1)
+    box1_area = (y[2] - y[0] + 1) * (y[3] - y[1] + 1)
     iou = inter_area / float(box0_area + box1_area - inter_area)
     return iou
 
@@ -106,9 +63,7 @@ def __calculate_skew_angel(image, delta=5, limit=45):
 
 
 def get_skew_angel(extracted_objects):
-    find_skew_angles = [__calculate_skew_angel(extracted_object['detected_object']) for
-                        extracted_object
-                        in
+    find_skew_angles = [__calculate_skew_angel(extracted_object['detected_object']) for extracted_object in
                         extracted_objects]
     skew_angles = find_skew_angles
     max_skew_angle = np.max(skew_angles)
@@ -125,12 +80,11 @@ def fix_skew(image, angle):
     (h, w) = image.shape[:2]
     center = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D(center, angle, 1.0)
-    rotated = cv2.warpAffine(image, M, (w, h),
-                             flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    rotated = cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
     return rotated
 
 
-def match_template(template, image):
+def match_template(template, image, threshold=0.9):
     """
     Parameters:
         template <class 'numpy.ndarray'> : The source Searched template.
@@ -142,7 +96,6 @@ def match_template(template, image):
         raise MissingRequiredParameterException('Missing Required input Template Parameter for Template Matching')
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     match = cv2.matchTemplate(gray_image, template, cv2.TM_CCOEFF_NORMED)
-    threshold = 0.9
     if match.all() >= threshold:
         return True
     return False

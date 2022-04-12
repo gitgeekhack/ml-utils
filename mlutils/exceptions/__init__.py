@@ -21,12 +21,13 @@ class InsufficientData(Exception):
 
 class DirectoryNotFound(Exception):
 
-    def __init__(self, message):
+    def __init__(self, message, file_url):
         self.message = message
+        self.file_url = file_url
         super().__init__(self.message)
 
     def __str__(self):
-        return self.message
+        return f'{self.file_url} -> {self.message}'
 
 
 class InvalidConfiguration(Exception):
