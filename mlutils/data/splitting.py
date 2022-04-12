@@ -7,7 +7,7 @@ from mlutils.exceptions import InvalidSplittingValues, InsufficientData, Directo
 from mlutils.data.dataset import Dataset
 from mlutils.file.utils import copy_file, get_files_from_dir, make_dir
 
-__all__ = ['split_data']
+__all__ = ['split_data','split_dataset_from_dir']
 
 
 def split_data(data, train=.70, valid=.20, unseen_test=0.0, random=True):
