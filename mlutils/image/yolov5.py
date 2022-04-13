@@ -122,5 +122,3 @@ def dataset_summary(data_file, save=False):
         if save:
             my_df = pd.DataFrame(data)
             my_df.to_csv(directory + '/summary.csv', header=header, index=False)
-
-dataset_summary("/home/heli/Desktop/git/mlutils/tests/data/yolov5_dataset/data.yaml")
