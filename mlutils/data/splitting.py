@@ -67,4 +67,4 @@ def split_dataset_from_dir(source_path, target_path, train=0.7, unseen_test=0.3,
         copy_file(source_path, os.path.join(target_path, 'valid'), files=data.valid)
         copy_file(source_path, os.path.join(target_path, 'test'), files=data.unseen_test)
     else:
-        raise DirectoryNotFound(f'Unable to find source directory', file_url=target_path)
+        raise DirectoryNotFound(f'Unable to find source directory', dir_path=target_path)
