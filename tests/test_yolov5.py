@@ -1,4 +1,4 @@
-from mlutils.exceptions import DirectoryNotFound
+from mlutils.exceptions import DirectoryNotFound, FileNotFound
 from mlutils.image.yolov5 import read_class_labels, split_dataset_by_labels, summary
 
 target_20 = './data/target_20'
@@ -13,7 +13,7 @@ class TestYoloV5:
     def test_read_class_labels_invalid(self):
         try:
             x = read_class_labels(label_path='/data/class_test.txt')
-        except DirectoryNotFound as e:
+        except FileNotFound as e:
             assert True
 
     def test_split_dataset_by_labels_invalid(self):
@@ -26,7 +26,7 @@ class TestYoloV5:
     def test_summary_invalid(self):
         try:
             x = summary(data_file='', save=False)
-        except DirectoryNotFound as e:
+        except FileNotFound as e:
             assert True
 
     def test_split_dataset_by_labels_valid(self):
