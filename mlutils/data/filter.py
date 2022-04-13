@@ -4,7 +4,7 @@ import cv2
 
 from mlutils.exceptions import DirectoryNotFound
 from mlutils.file.utils import make_dir, copy_file
-from mlutils.image_helper.utils import check_minimum_dimension
+from mlutils.image.utils import check_minimum_dimension
 
 
 def filter_images_by_dimension(source_path, target_path, min_width=320, min_height=320):
@@ -28,4 +28,4 @@ def filter_images_by_dimension(source_path, target_path, min_width=320, min_heig
                     valid_images.append(file)
         copy_file(source_path, target_path, valid_images)
     else:
-        raise DirectoryNotFound(f'Unable to find source directory')
+        raise DirectoryNotFound(f'Unable to find source directory', dir_path=source_path)
