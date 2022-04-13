@@ -30,6 +30,17 @@ class DirectoryNotFound(Exception):
         return f'{self.dir_path} -> {self.message}'
 
 
+class FileNotFound(Exception):
+
+    def __init__(self, message, file_path):
+        self.message = message
+        self.file_path = file_path
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f'{self.file_path} -> {self.message}'
+
+
 class InvalidConfiguration(Exception):
 
     def __init__(self, message):

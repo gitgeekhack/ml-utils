@@ -5,7 +5,7 @@ from os.path import join
 
 from tqdm import tqdm
 
-from mlutils.exceptions import DirectoryNotFound
+from mlutils.exceptions import DirectoryNotFound, FileNotFound
 
 
 def get_files_from_dir(dir):
@@ -22,9 +22,14 @@ def make_dir(dir):
         os.makedirs(dir)
 
 
-def file_exists(path):
+def directory_exists(path):
     if not os.path.exists(path):
         raise DirectoryNotFound(f'Unable to find required directory', dir_path=path)
+
+
+def file_exists(path):
+    if not os.path.exists(path):
+        raise FileNotFound(f'Unable to find required file', file_path=path)
 
 
 def copy_file(source_path, target_path, files=None):
