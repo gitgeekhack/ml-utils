@@ -11,7 +11,7 @@ from mlutils.data import split_data
 from mlutils.exceptions import UnsupportedObjectType
 from mlutils.file.utils import copy_file, directory_exists, file_exists
 
-__all__ = ['get_bbox_by_label', 'read_class_labels', 'split_dataset_by_labels', 'summary']
+__all__ = ['get_bbox_by_label', 'read_label_classes', 'split_dataset_by_labels', 'dataset_summary']
 
 
 def get_bbox_by_label(results):
