@@ -4,6 +4,7 @@ import re
 
 import termtables
 import pandas as pd
+import yaml
 from tqdm import tqdm
 
 from mlutils.data import split_data
@@ -95,14 +96,13 @@ def dataset_summary(data_file, save=False):
         save: <boolean> Saves summary to csv file if True.
     """
     file_exists(data_file)
-    with open(data_file, "r") as f:
-        lines = f.readlines()
-        temp = {line.split(':')[0]: line.split(':')[1] for line in lines if len(line.strip()) > 1}
-        class_labels = re.sub(r"[\[\]\s]", "", temp['names']).split(',')
+    with open(data_file, 'r') as stream:
+        data = yaml.safe_load(stream)
+        class_labels = data['names']
         directory = os.path.dirname(data_file)
-        valid_path = directory + temp['val'].replace('.', '').strip()
-        test_path = directory + temp['test'].replace('.', '').strip()
-        train_path = directory + temp['train'].replace('.', '').strip()
+        valid_path = directory + data['val'].replace('.', '')
+        test_path = directory + data['test'].replace('.', '')
+        train_path = directory + data['train'].replace('.', '')
         valid_summary = split_dataset_by_labels(image_path=valid_path,
                                                 annotation_path=valid_path.replace('images', 'labels'),
                                                 class_labels=class_labels, save=False)
@@ -122,3 +122,5 @@ def dataset_summary(data_file, save=False):
         if save:
             my_df = pd.DataFrame(data)
             my_df.to_csv(directory + '/summary.csv', header=header, index=False)
+
+dataset_summary("/home/heli/Desktop/git/mlutils/tests/data/yolov5_dataset/data.yaml")
