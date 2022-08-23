@@ -1,7 +1,4 @@
-import asyncio
-
 import cv2
-import fitz
 import numpy as np
 from scipy.ndimage import interpolation as inter
 
@@ -99,3 +96,24 @@ def match_template(template, image, threshold=0.9):
     if match.all() >= threshold:
         return True
     return False
+
+
+def apply_bbox_padding(page_dim, input_bbox, x0_pad=0.0, y0_pad=0.0, x1_pad=0.0, y1_pad=0.0):
+    """
+        applies padding to the input bounding box relative to the page size.
+        Parameters:
+          page_dim <tuple> : The page dimension of page for relative padding to bounding box.
+          bbox <tuple> : The input bounding box to be padded.
+          x0_pad <float> : The input percentage relative to page size to be padded to x0
+          x1_pad <float> : The input percentage relative to page size to be padded to x1
+          y0_pad <float> : The input percentage relative to page size to be padded to y0
+          y1_pad <float> : The input percentage relative to page size to be padded to y1
+        Returns:
+         <tuple> : The output padded bounding box
+    """
+    x0, y0, x1, y1 = input_bbox
+    w = page_dim[2]
+    h = page_dim[3]
+    x0, y0 = x0 + w * x0_pad, y0 + h * y0_pad
+    x1, y1 = x1 + w * x1_pad, y1 + h * y1_pad
+    return x0, y0, x1, y1
