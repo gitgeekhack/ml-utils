@@ -1,6 +1,6 @@
 import pickle
 
-from mlutils.pdf.pdf_helper import PDFHelper
+from mlutils.pdf.digital_pdf_helper import PDFHelper
 
 pdf_obj = PDFHelper('./data/pdf/ALLIANCE_APP_Alex Vigil.pdf')
 form_field_pdf_obj = PDFHelper('./data/pdf/01ArtisanBilingual(11_19_2021).pdf')

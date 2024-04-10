@@ -1,5 +1,5 @@
 import os
-import sys
+from glob import glob
 import uuid
 
 import albumentations as A
@@ -7,7 +7,6 @@ import cv2
 from tqdm import tqdm
 
 from mlutils.exceptions import InvalidConfiguration
-from mlutils.file.utils import get_all_absolute_file_paths_from_dir, make_dir
 
 
 class Augmentation:
@@ -27,20 +26,20 @@ class Augmentation:
         self.source_path = config['source_path']
         self.target_path = config['target_path']
         self.target_path_images = os.path.join(self.target_path, 'images')
-        make_dir(self.target_path_images)
+        os.makedirs(self.target_path_images, exist_ok=True)
         try:
             self.label_path = config['label_path']
             self.target_path_labels = os.path.join(self.target_path, 'labels')
-            make_dir(self.target_path_labels)
+            os.makedirs(self.target_path_labels, exist_ok=True)
         except KeyError:
             self.label_path = None
 
     def __load_images(self):
-        images = get_all_absolute_file_paths_from_dir(self.source_path)
+        images = [x for x in glob(os.path.join(self.source_path, "**/*"), recursive=True) if not os.path.isdir(x)]
         return images
 
     def __load_labels(self):
-        return get_all_absolute_file_paths_from_dir(self.label_path) if self.label_path else []
+        return [x for x in glob(os.path.join(self.source_path, "**/*"), recursive=True) if not os.path.isdir(x)] if self.label_path else []
 
     def __map_dataset(self, images, labels):
         dataset = {}

@@ -1,17 +1,23 @@
-import glob
 import os
-import re
+import glob
+import shutil
 
+import yaml
 import termtables
 import pandas as pd
-import yaml
 from tqdm import tqdm
 
-from mlutils.data import split_data
 from mlutils.exceptions import UnsupportedObjectType
-from mlutils.file.utils import copy_file, directory_exists, file_exists
 
 __all__ = ['get_bbox_by_label', 'read_label_classes', 'split_dataset_by_labels', 'dataset_summary']
+
+
+def __copy_file(source_path, target_path, files=None):
+    os.makedirs(target_path, exist_ok=True)
+    if files is None:
+        files = os.listdir(source_path)
+    for file in tqdm(files, desc=f"Copying files to {target_path.split('/')[-1]}"):
+        shutil.copy(os.path.join(source_path, file), target_path)
 
 
 def get_bbox_by_label(results):
@@ -48,7 +54,6 @@ def read_label_classes(label_path):
     Returns:
         class_labels: <list> list of class labels
     """
-    file_exists(label_path)
     with open(label_path) as file:
         class_labels = [line.rstrip() for line in file]
     return class_labels
@@ -66,8 +71,6 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
     Returns:
         images_per_label: <dict> returns set of image name as value and respective labels as key.
     """
-    directory_exists(image_path)
-    directory_exists(annotation_path)
     images_per_label = {k: set() for k in class_labels}
     for filename in tqdm(os.listdir(annotation_path), 'splitting dataset'):
         file = os.path.join(annotation_path, filename)
@@ -83,7 +86,7 @@ def split_dataset_by_labels(image_path, annotation_path, class_labels, target_pa
                         images_per_label[class_labels[label]].add(image_name)
     if save and target_path:
         for key, value in images_per_label.items():
-            copy_file(source_path=image_path, target_path=f'{target_path}/{key}', files=list(value))
+            __copy_file(source_path=image_path, target_path=f'{target_path}/{key}', files=list(value))
     return images_per_label
 
 
@@ -95,7 +98,6 @@ def dataset_summary(data_file, save=False):
         data_file: <string> path to data.yaml file
         save: <boolean> Saves summary to csv file if True.
     """
-    file_exists(data_file)
     with open(data_file, 'r') as stream:
         data = yaml.safe_load(stream)
         class_labels = data['names']
