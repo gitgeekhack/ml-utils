@@ -25,7 +25,7 @@ class TestDataSplitDataset():
 
     def test_apply_bbox_padding(self):
         doc = fitz.open(pdf_file)
-        page_dime = doc[0].CropBox
+        page_dime = doc[0].cropbox
         x0, y0, x1, y1 = (0.01, 0.01, 0.01, 0.01)
         x = apply_bbox_padding(page_dim=page_dime,
                                input_bbox=(0.25, 0.5, 0.5, 0.75),

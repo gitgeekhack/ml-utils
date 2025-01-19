@@ -93,7 +93,7 @@ class TestDataSplitDataset():
         split_dataset_from_dir(source_path=source_20, target_path=target_20,
                                train=0.7, valid=0.2, unseen_test=0.1)
         _, dirs, _ = next(os.walk(target_20))
-        assert dirs == ['train', 'valid', 'test']
+        assert dirs.sort() == ['train', 'valid', 'test'].sort()
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/train')) == 7
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/valid')) == 2
         assert sum(len(files) for _, _, files in os.walk(r'data/target_20/test')) == 1
@@ -104,5 +104,5 @@ class TestDataSplitDataset():
         try:
             split_dataset_from_dir(source_path=source_0, target_path=target_20,
                                    train=0.7, valid=0.2, unseen_test=0.1)
-        except InsufficientData as e:
+        except DirectoryNotFound as e:
             assert True

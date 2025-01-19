@@ -1,16 +1,20 @@
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
+# Read dependencies from requirements.txt
+def read_requirements(filename):
+    with open(filename, 'r') as f:
+        return f.read().splitlines()
+
+setup(
     name='mlutils',
     version='0.0.2',
     description="ML utils library for python",
     long_description_content_type="text/markdown",
     url="https://github.com/gitgeekhack/ml-utils",
-    packages=['mlutils', 'mlutils.data', 'mlutils.exceptions', 'mlutils.image', 'mlutils.pdf'],
+    packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=['numpy==1.22.0', 'opencv-python==4.5.5.64', 'tqdm==4.63.1', 'tqdm==4.63.1',
-                      'termtables~=0.2.4', 'setuptools~=60.2.0', 'pandas==1.4.1', ],
+    install_requires=read_requirements('requirements.txt'),
 )

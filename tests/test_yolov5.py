@@ -13,20 +13,20 @@ class TestYoloV5:
     def test_read_class_labels_invalid(self):
         try:
             x = read_label_classes(label_path='/data/class_test.txt')
-        except FileNotFound as e:
+        except FileNotFoundError as e:
             assert True
 
     def test_split_dataset_by_labels_invalid(self):
         try:
             x = split_dataset_by_labels(image_path='', annotation_path='', class_labels=['a'], target_path=None,
                                         save=False)
-        except DirectoryNotFound as e:
+        except FileNotFoundError as e:
             assert True
 
     def test_summary_invalid(self):
         try:
             x = dataset_summary(data_file='', save=False)
-        except FileNotFound as e:
+        except FileNotFoundError as e:
             assert True
 
     def test_split_dataset_by_labels_valid(self):
